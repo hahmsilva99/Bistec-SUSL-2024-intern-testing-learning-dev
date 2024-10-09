@@ -1,12 +1,20 @@
 from flask import Flask, render_template, request, jsonify
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from cv_data import cv_data  # Assuming you have cv_data.py with candidates' CVs
+from cv_data import cv_data  # Import CV data (as in your previous setup)
 
 app = Flask(__name__)
 
 # Load Microsoft DialoGPT model and tokenizer
 tokenizer = AutoTokenizer.from_pretrained("microsoft/DialoGPT-medium")
 model = AutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-medium")
+
+# Function to filter candidates by skill
+def filter_candidates_by_skill(skill):
+    matching_candidates = []
+    for name, details in cv_data.items():
+        if skill.lower() in [s.lower() for s in details['skills']]:
+            matching_candidates.append(name)
+    return matching_candidates
 
 # Function to query CV data
 def query_cv(candidate_name, query):
@@ -44,11 +52,15 @@ def index():
 def chat():
     data = request.json
     user_input = data['query']
-
-    # Check if the input is related to CV details
-    if any(keyword in user_input.lower() for keyword in ["name", "skills", "experience", "education"]):
-        bot_response = query_cv('Harshana Madhuwantha', user_input)  # Add logic to select candidate dynamically
+    
+    # Try to find candidates matching the skill
+    matching_candidates = filter_candidates_by_skill(user_input)
+    
+    if matching_candidates:
+        # Suggest candidates based on the skill provided
+        bot_response = f"Candidates with {user_input} skill: {', '.join(matching_candidates)}."
     else:
+        # If no candidates match, generate a chatbot response
         bot_response = generate_response(user_input)
     
     return jsonify({'response': bot_response})
