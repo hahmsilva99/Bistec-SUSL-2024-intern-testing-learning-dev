@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from cv_data import cv_data  # Import CV data (as in your previous setup)
+from cv_data import cv_data
 
 app = Flask(__name__)
 
@@ -8,7 +8,7 @@ app = Flask(__name__)
 tokenizer = AutoTokenizer.from_pretrained("microsoft/DialoGPT-medium")
 model = AutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-medium")
 
-# Function to filter candidates by skill
+# Filter candidates by skill
 def filter_candidates_by_skill(skill):
     matching_candidates = []
     for name, details in cv_data.items():
@@ -16,33 +16,26 @@ def filter_candidates_by_skill(skill):
             matching_candidates.append(name)
     return matching_candidates
 
-# Function to query CV data
-def query_cv(candidate_name, query):
+# Query CV data
+def query_cv(candidate_name, query_type):
     if candidate_name in cv_data:
         cv = cv_data[candidate_name]
         
-        if "name" in query.lower():
-            return f"Candidate's Name: {cv['name']}"
-        elif "skills" in query.lower():
+        if query_type == "skills":
             return f"Skills: {', '.join(cv['skills'])}"
-        elif "experience" in query.lower():
+        elif query_type == "experience":
             exp_details = "\n".join([f"{exp['position']} at {exp['company']} ({exp['years']} years)" for exp in cv['experience']])
             return f"Experience: \n{exp_details}"
-        elif "education" in query.lower():
+        elif query_type == "education":
             edu = cv['education']
             return f"Education: {edu['degree']} from {edu['university']} (Graduated in {edu['graduation_year']})"
+        elif query_type == "contact":
+            contact = cv.get('contact', 'No contact details available.')
+            return f"Contact Details: {contact}"
         else:
-            return "I couldn't understand your query. Please ask about name, skills, experience, or education."
+            return "Invalid query type."
     else:
-        return "Candidate not found. Please provide a valid name."
-
-# Function to generate response from Microsoft DialoGPT
-def generate_response(input_text):
-    new_input_ids = tokenizer.encode(input_text + tokenizer.eos_token, return_tensors='pt')
-    bot_input_ids = new_input_ids
-    chat_history_ids = model.generate(bot_input_ids, max_length=1000, pad_token_id=tokenizer.eos_token_id)
-    response = tokenizer.decode(chat_history_ids[:, bot_input_ids.shape[-1]:][0], skip_special_tokens=True)
-    return response
+        return "Candidate not found."
 
 @app.route('/')
 def index():
@@ -53,17 +46,24 @@ def chat():
     data = request.json
     user_input = data['query']
     
-    # Try to find candidates matching the skill
+    # Filter candidates by the skill mentioned
     matching_candidates = filter_candidates_by_skill(user_input)
     
     if matching_candidates:
-        # Suggest candidates based on the skill provided
-        bot_response = f"Candidates with {user_input} skill: {', '.join(matching_candidates)}."
+        return jsonify({'candidates': matching_candidates})
     else:
-        # If no candidates match, generate a chatbot response
-        bot_response = generate_response(user_input)
+        return jsonify({'response': "No person with the relevant skill is mentioned in our data."})
+
+@app.route('/details', methods=['POST'])
+def details():
+    data = request.json
+    candidate_name = data['candidate']
+    detail_type = data['detail']
     
-    return jsonify({'response': bot_response})
+    # Query the selected candidate's details
+    detail_response = query_cv(candidate_name, detail_type)
+    
+    return jsonify({'response': detail_response})
 
 if __name__ == '__main__':
     app.run(debug=True)

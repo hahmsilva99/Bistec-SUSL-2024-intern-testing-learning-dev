@@ -1,56 +1,30 @@
-
-
 cv_data = {
     "Harshana Madhuwantha": {
         "name": "Harshana Madhuwantha",
-        "skills": ["Python", "Data Analysis", "Machine Learning", "SQL"],
+        "skills": ["Python", "AWS", "Django"],
         "experience": [
-            {"position": "Data Analyst", "company": "TechCorp", "years": 3},
-            {"position": "Junior Developer", "company": "Web Solutions", "years": 2}
+            {"position": "Software Engineer", "company": "TechCorp", "years": 3},
+            {"position": "Backend Developer", "company": "DevSoft", "years": 2}
         ],
         "education": {
-            "degree": "B.Sc. in Computer Science",
-            "university": "XYZ University",
-            "graduation_year": 2018
-        }
+            "degree": "Bachelor of Computer Science",
+            "university": "University of Colombo",
+            "graduation_year": 2019
+        },
+        "contact": "harshana.m@techcorp.com"
     },
     "Isuru Aththanayake": {
         "name": "Isuru Aththanayake",
-        "skills": ["JavaScript", "React", "Node.js", "CSS"],
+        "skills": ["Java", "Spring Boot", "Docker"],
         "experience": [
-            {"position": "Frontend Developer", "company": "Web Innovators", "years": 4},
-            {"position": "UI/UX Designer", "company": "Creative Labs", "years": 2}
+            {"position": "Senior Developer", "company": "AlphaTech", "years": 5}
         ],
         "education": {
-            "degree": "B.A. in Design",
-            "university": "ABC University",
+            "degree": "Master of Information Technology",
+            "university": "University of Peradeniya",
             "graduation_year": 2017
-        }
+        },
+        "contact": "isuru.a@alphatech.com"
     },
-    "Manesha Tharida": {
-        "name": "Manesha Tharida",
-        "skills": ["Java", "Spring", "Kubernetes", "AWS"],
-        "experience": [
-            {"position": "Backend Developer", "company": "CloudTech", "years": 5},
-            {"position": "DevOps Engineer", "company": "Infrastructure Inc.", "years": 3}
-        ],
-        "education": {
-            "degree": "M.Sc. in Computer Engineering",
-            "university": "DEF University",
-            "graduation_year": 2016
-        }
-    },
-    "Buddhi Sri": {
-        "name": "Buddhi Sri",
-        "skills": ["Python", "TensorFlow", "Deep Learning", "NLP"],
-        "experience": [
-            {"position": "AI Researcher", "company": "AI Labs", "years": 3},
-            {"position": "Data Scientist", "company": "Data Insights", "years": 2}
-        ],
-        "education": {
-            "degree": "Ph.D. in Artificial Intelligence",
-            "university": "GHI University",
-            "graduation_year": 2019
-        }
-    }
+    # Add more candidates as needed...
 }
