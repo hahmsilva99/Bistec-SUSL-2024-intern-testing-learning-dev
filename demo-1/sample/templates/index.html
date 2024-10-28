@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Chat Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>CV Chat Analyzer</h1>
+            <p>Type a skill, technology, or framework (e.g., Python, Java) to see matching candidates.</p>
+        </div>
+
+        <div class="chat-window">
+            <div id="chat-output"></div>
+        </div>
+
+        <div class="chat-input">
+            <input type="text" id="input-text" placeholder="Type your skill or query...">
+            <button id="send-button">Send</button>
+        </div>
+
+        <!-- Candidate dropdown -->
+        <div id="candidate-dropdown" style="display:none;">
+            <label for="candidate-select">Select a Candidate:</label>
+            <select id="candidate-select"></select>
+        </div>
+
+        <!-- Details dropdown (now includes contact) -->
+        <div id="details-dropdown" style="display:none;">
+            <label for="details-select">Select Information:</label>
+            <select id="details-select">
+                <option value="education">Education</option>
+                <option value="experience">Experience</option>
+                <option value="skills">Skills</option>
+                <option value="contact">Contact Details</option>
+            </select>
+            <button id="details-button">Get Details</button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='chat.js') }}"></script>
+</body>
+</html>
